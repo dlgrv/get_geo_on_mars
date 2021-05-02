@@ -67,9 +67,9 @@ y = 180
 #y = 55.822001
 xpx = x * 8.056
 ypx = y * 5.195
-gradus_x = 120
-gradus_y = 60
-a = int(a / 360 * gradus_x)
+gradus_x = 30
+gradus_y = 10
+a = int(a / 360 * gradus_x * 2)
 
 
 for x in range(-a, a+1):
@@ -80,11 +80,19 @@ for x in range(-a, a+1):
                  fill='red')
     draw.ellipse((x_centre + xpx - rad, y_centre + ypx - rad, x_centre + xpx + rad, y_centre + ypx + rad),
                  fill='red')
+
 b = -int(b * 4 / 360 * gradus_y)
 a = 1450
 for i in range(-a, a):
     draw.ellipse((x_centre + i - rad, y_centre + b - rad, x_centre + i + rad, y_centre + b + rad),
                  fill='blue')
+
+rad = 10
+ypx = -int(960 * 4 / 360 * gradus_y)
+xpx = (1450 / 360 * gradus_x * 2) * sqrt(1 - (ypx/960)**2)
+draw.ellipse((x_centre + xpx - rad, y_centre + ypx - rad, x_centre + xpx + rad, y_centre + ypx + rad),
+                 fill='yellow')
+
 
 
 '''

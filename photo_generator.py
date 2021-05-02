@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 
-img = Image.open('photo_mars.jpg') #8192x4096
+img = Image.open('clean_mars_low.png') #3000x1953
 draw = ImageDraw.Draw(img)
 import time
 
@@ -15,8 +15,5 @@ def photo_generator(user_id,x_degree, y_degree):
     draw.ellipse((x_null + x_degree * x_one_degree_in_px - rad, y_null - y_degree * y_one_degree_in_px - rad,
                   x_null + x_degree * x_one_degree_in_px + rad, y_null - y_degree * y_one_degree_in_px + rad),
                  fill='green')
+    img.save(f'{user_id}.png')
 start = time.time()
-photo_generator(000, 37.656746, 55.821996)
-
-img.show()
-print(time.time()-start)
