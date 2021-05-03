@@ -45,6 +45,7 @@ def start_message(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
+    bot.delete_message(call.from_user.id, call.message.id)
     if call.data == 'rus':
         bot.answer_callback_query(call.id, f'Язык выбран{emoji.CHECK_MARK_BUTTON}')
         bot.send_message(call.from_user.id,

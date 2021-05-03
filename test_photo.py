@@ -67,8 +67,8 @@ y = 180
 #y = 55.822001
 xpx = x * 8.056
 ypx = y * 5.195
-gradus_x = 30
-gradus_y = 10
+gradus_x = 37.656808
+gradus_y = 55.822001
 a = int(a / 360 * gradus_x * 2)
 
 
