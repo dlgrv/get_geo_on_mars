@@ -28,3 +28,4 @@ def instruction(lang):
                       "I'll also tell you which Martian attraction is closest to you and add it to your personal list!"
         return return_text
 
+
