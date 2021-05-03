@@ -94,7 +94,6 @@ draw.ellipse((x_centre + xpx - rad, y_centre + ypx - rad, x_centre + xpx + rad, 
                  fill='yellow')
 
 
-
 '''
 x = 360
 a = 1450

@@ -1,7 +1,6 @@
 from config import token
 import emoji
 import telebot
-from telebot import types
 from photo_generator import create_map_with_geotag
 import db
 import keybaord
