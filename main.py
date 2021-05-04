@@ -65,16 +65,6 @@ if __name__ == '__main__':
                              reply_markup=keybaord.menu('eng'))
             db.update_language(call.from_user.id, 'eng')
 
-    '''
-    @bot.message_handler(commands=["geo"])
-    def geo(message):
-        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-        button_geo = types.KeyboardButton(text=f'{emoji.GLOBE_SHOWING_AMERICAS}{emoji.ROUND_PUSHPIN}',
-                                          request_location=True)
-        keyboard.add(button_geo)
-        bot.send_message(message.chat.id, "Привет! Нажми на кнопку и передай мне свое местоположение", reply_markup=keyboard)
-    '''
-
     @bot.message_handler(content_types=["location"])
     def location(message):
         if message.location is not None:
