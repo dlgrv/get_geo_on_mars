@@ -70,6 +70,26 @@ def update_language(uid, lang):
         cursor.close()
         conn.close()
 
+def update_attractions(uid, attractions):
+    dbconfig = read_db_config()
+    conn = MySQLConnection(**dbconfig)
+    cursor = conn.cursor()
+
+    query = f'UPDATE {table_name} ' \
+            f'SET attractions = "{attractions}" ' \
+            f'WHERE uid = "{uid}" ' \
+            f'LIMIT 1'
+    try:
+        cursor.execute(query)
+        conn.commit()
+        print(f'[DataBase] --> (update_attractions)')
+    except Error as e:
+        print(f'[DataBase] ERR: {e} (update_attractions)')
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
 # GET - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 def get_language(uid):
@@ -83,11 +103,31 @@ def get_language(uid):
             f'LIMIT 1'
     try:
         cursor.execute(query)
-        conn.commit()
-        print(f'[DataBase] --> (update_language)')
+        rows = cursor.fetchone()
+        print(f'[DataBase] --> {rows} (get_language)')
+        return rows
     except Error as e:
-        print(f'[DataBase] ERR: {e} (update_language)')
-        pass
+        print(f'[DataBase] ERR: {e} (get_language)')
+    finally:
+        cursor.close()
+        conn.close()
+
+def get_attractions(uid):
+    dbconfig = read_db_config()
+    conn = MySQLConnection(**dbconfig)
+    cursor = conn.cursor()
+
+    query = f'SELECT attractions ' \
+            f'FROM {table_name} ' \
+            f'WHERE uid = {uid} ' \
+            f'LIMIT 1'
+    try:
+        cursor.execute(query)
+        rows = cursor.fetchone()
+        print(f'[DataBase] --> {rows} (get_language)')
+        return rows
+    except Error as e:
+        print(f'[DataBase] ERR: {e} (get_language)')
     finally:
         cursor.close()
         conn.close()

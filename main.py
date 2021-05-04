@@ -1,11 +1,12 @@
 from config import token
 import emoji
 import telebot
-from photo_generator import create_map_with_geotag
+import photo_generator
 import db
 import keybaord
 import text_
 from photo_generator import ava_resize
+from info_from_wikipedia import get_info
 
 bot = telebot.TeleBot(token)
 
@@ -71,11 +72,12 @@ if __name__ == '__main__':
             bot.send_message(message.chat.id,
                              text='Запускаем ракету!')
             save_user_profile_photo(message)
-            create_map_with_geotag(uid=message.from_user.id,
-                                   gradus_x=message.location.longitude,
-                                   gradus_y=message.location.latitude)
+            nearest_attraction_id = photo_generator.search_nearest_attraction(uid=message.from_user.id,
+                                                                              gradus_x=message.location.longitude,
+                                                                              gradus_y=message.location.latitude)
             uid = message.chat.id
             map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
+            get_info(uid, nearest_attraction_id)
             bot.send_photo(message.chat.id, map_with_geotag)
             bot.send_message(message.chat.id, f'{message.location.longitude}, {message.location.latitude}')
 
