@@ -15,11 +15,11 @@ def menu(lang):
         menu_keyboard_rus = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
         menu_keyboard_rus.add(KeyboardButton(text=f"Где я на Марсе?",
                                              request_location=True),
-                              KeyboardButton(text=f"Мои места"))
+                              KeyboardButton(text=f"Список моих мест"))
         return menu_keyboard_rus
     elif lang == 'eng':
         menu_keyboard_eng = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
         menu_keyboard_eng.add(KeyboardButton(text=f"Where I'm on Mars?",
                                              request_location=True),
-                              KeyboardButton(text=f"My places"))
+                              KeyboardButton(text=f"List of my places"))
         return menu_keyboard_eng

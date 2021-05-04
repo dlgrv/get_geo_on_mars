@@ -1,4 +1,7 @@
 import emoji
+import db
+from info_from_wikipedia import get_info
+from attractions import attractions
 
 def first_start():
     return_text = f'{emoji.FLAG_RUSSIA}Выберите язык{emoji.ALIEN}\n\n'\
@@ -28,4 +31,22 @@ def instruction(lang):
                       "I'll also tell you which Martian attraction is closest to you and add it to your personal list!"
         return return_text
 
-
+def info_about(lang, nearest_attraction_id):
+    if lang == 'rus':
+        type_attraction = attractions[lang][nearest_attraction_id][1]
+        name_attraction = attractions[lang][nearest_attraction_id][0]
+        info_about_attraction = get_info(lang, nearest_attraction_id)
+        return_text = f'{emoji.ROUND_PUSHPIN}Ближайшее к вам место: {type_attraction} {name_attraction}\n\n' \
+                      f'{emoji.SPIDER_WEB}Вот, что мы нашли о нем в Интернете:\n\n' \
+                      f'{info_about_attraction}\n\n' \
+                      f'{emoji.CHECK_MARK_BUTTON}Также, место добавлено в ваш список'
+        return return_text
+    elif lang == 'eng':
+        type_attraction = attractions[lang][nearest_attraction_id][1]
+        name_attraction = attractions[lang][nearest_attraction_id][0]
+        info_about_attraction = get_info(lang, nearest_attraction_id)
+        return_text = f"{emoji.ROUND_PUSHPIN}Nearest place to you: {type_attraction} {name_attraction}\n\n" \
+                      f"{emoji.SPIDER_WEB}Here's what we found about him on the Internet:\n\n" \
+                      f"{info_about_attraction}\n\n" \
+                      f"{emoji.CHECK_MARK_BUTTON}Also, the place is added to your list"
+        return return_text

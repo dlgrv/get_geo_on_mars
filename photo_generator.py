@@ -41,7 +41,7 @@ def save_user_attractions(uid, nearest_attraction_id, gradus_x, gradus_y):
 
 def drawing_not_nearest_attractions(uid, nearest_attraction_id, attractions_list, gradus_x, gradus_y):
     map = Image.open('./clean_mars_low.png')
-    pin_2 = Image.open('./pattern/pin_2.png') # 59x107
+    pin_2 = Image.open('./pattern/pin_2.png') # 89x161
     x_centre = 1500
     y_centre = 975
     for attractions_id in attractions_list:
@@ -51,7 +51,7 @@ def drawing_not_nearest_attractions(uid, nearest_attraction_id, attractions_list
             attraction_coord_y = attractions['rus'][int(attractions_id)][2][1]
             attraction_coord_ypx = int(888 * 4 / 360 * attraction_coord_y)
             attraction_coord_xpx = int((1450 / 360 * attraction_coord_x * 2) * sqrt(1 - (attraction_coord_ypx / 960) ** 2))
-            paste_pin_coord = (x_centre + attraction_coord_xpx - 54, y_centre - attraction_coord_ypx - 105)
+            paste_pin_coord = (x_centre + attraction_coord_xpx - 45, y_centre - attraction_coord_ypx - 161)
             print(paste_pin_coord)
             map.paste(pin_2, paste_pin_coord, pin_2)
     map.save(f'./ready_map_for_user/{uid}.png')
@@ -86,6 +86,7 @@ def drawing_geotag(uid, nearest_attraction_id, gradus_x, gradus_y):
     map.save(f'./ready_map_for_user/{uid}.png')
     drawing_nearest_attraction(uid, nearest_attraction_id)
 
+
 def drawing_nearest_attraction(uid, nearest_attraction_id):
     map = Image.open(f'./ready_map_for_user/{uid}.png')
     map_size = map.size
@@ -95,11 +96,9 @@ def drawing_nearest_attraction(uid, nearest_attraction_id):
     attraction_coord_y = attractions['rus'][int(nearest_attraction_id)][2][1]
     attraction_coord_ypx = int(888 * 4 / 360 * attraction_coord_y)
     attraction_coord_xpx = int((1450 / 360 * attraction_coord_x * 2) * sqrt(1 - (attraction_coord_ypx / 960) ** 2))
-    paste_pin_coord = (x_centre + attraction_coord_xpx - 54, y_centre - attraction_coord_ypx - 105)
+    paste_pin_coord = (x_centre + attraction_coord_xpx - 45, y_centre - attraction_coord_ypx - 161)
     map.paste(pin_1, paste_pin_coord, pin_1)
     map.save(f'./ready_map_for_user/{uid}.jpg')
 
 
 #search_nearest_attraction(824956847, 37.656808, 55.822001)
-gradus_x = 37.656808
-gradus_y = 55.822001
