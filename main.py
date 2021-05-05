@@ -6,7 +6,6 @@ import db
 import keybaord
 import text_
 from photo_generator import ava_resize
-from info_from_wikipedia import get_info
 
 bot = telebot.TeleBot(token)
 
@@ -87,5 +86,17 @@ if __name__ == '__main__':
             map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
             bot.send_photo(message.chat.id, map_with_geotag)
             bot.send_message(message.chat.id, text=text_.info_about(lang, nearest_attraction_id))
+
+
+    @bot.message_handler(content_types=['text'])
+    def send_text(message):
+        try:
+            bot.delete_message(message.chat.id, message.id)
+            if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
+                bot.send_message(message.chat.id, 'попопо')
+            elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
+                bot.send_message(message.chat.id, 'popo')
+        except Exception as e:
+            print('Error from get attraction list: ', e)
 
     bot.polling()

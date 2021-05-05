@@ -50,3 +50,6 @@ def info_about(lang, nearest_attraction_id):
                       f"{info_about_attraction}\n\n" \
                       f"{emoji.CHECK_MARK_BUTTON}Also, the place is added to your list"
         return return_text
+
+def get_attractions_list(uid):
+    pass
