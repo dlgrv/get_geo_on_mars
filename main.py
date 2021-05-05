@@ -67,7 +67,7 @@ if __name__ == '__main__':
                              reply_markup=keybaord.menu('eng'))
             db.update_language(uid, 'eng')
 
-    time_limit = 10
+    time_limit_for_location = 10
     location_timer = {}
     @bot.message_handler(content_types=["location"])
     def location(message):
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                 map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
                 bot.send_photo(message.chat.id, map_with_geotag)
                 bot.send_message(message.chat.id, text=text_.info_about(lang, nearest_attraction_id))
-            elif time.time() - location_timer[uid] > time_limit:
+            elif time.time() - location_timer[uid] > time_limit_for_location:
                 location_timer[uid] = real_time
                 if lang == 'rus':
                     bot.send_message(chat_id=uid,
@@ -116,10 +116,12 @@ if __name__ == '__main__':
             else:
                 if lang == 'rus':
                     bot.send_message(chat_id=uid,
-                                     text=f'{emoji.WARNING}Нельзя запрашивать свое местоположение чаще одного раза в 10 секунд')
+                                     text=f'{emoji.WARNING}Нельзя запрашивать свое местоположение чаще одного раза '
+                                          f'в {time_limit_for_location} секунд')
                 elif lang == 'eng':
                     bot.send_message(chat_id=uid,
-                                     text=f"{emoji.WARNING}You can't request your location more than once every 10 seconds")
+                                     text=f"{emoji.WARNING}You can't request your location more than once every "
+                                          f"{time_limit_for_location} seconds")
         else:
             if lang == 'rus':
                 bot.send_message(chat_id=uid,
@@ -129,6 +131,7 @@ if __name__ == '__main__':
                                  text="Couldn't determine your location")
 
     list_timer = {}
+    time_limit_for_list = 5
     @bot.message_handler(content_types=['text'])
     def send_text(message):
         try:

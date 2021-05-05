@@ -51,7 +51,7 @@ def info_about(lang, nearest_attraction_id):
 def get_attractions_list(uid, lang):
     attractions_list = db.get_attractions(uid)[0].split()
     if lang == 'rus':
-        return_text = f'{emoji.MEMO}Список твоих мест{emoji.BACKHAND_INDEX_POINTING_DOWN_LIGHT_SKIN_TONE}\n\n'
+        return_text = f'{emoji.MEMO}Список ваших мест{emoji.BACKHAND_INDEX_POINTING_DOWN_LIGHT_SKIN_TONE}\n\n'
     elif lang == 'eng':
         return_text = f"{emoji.MEMO}List of your places{emoji.BACKHAND_INDEX_POINTING_DOWN_LIGHT_SKIN_TONE}\n\n"
     counter = 0
