@@ -6,6 +6,7 @@ import db
 import keybaord
 import text_
 from photo_generator import ava_resize
+import time
 
 bot = telebot.TeleBot(token)
 
@@ -29,6 +30,7 @@ def save_user_profile_photo(message):
         return False
 
 if __name__ == '__main__':
+
     @bot.message_handler(commands=['start'])
     def start_message(message):
         try:
@@ -51,51 +53,97 @@ if __name__ == '__main__':
 
     @bot.callback_query_handler(func=lambda call: True)
     def callback_query(call):
-        bot.delete_message(call.from_user.id, call.message.id)
+        uid = call.from_user.id
         if call.data == 'rus':
             bot.answer_callback_query(call.id, f'Язык выбран{emoji.CHECK_MARK_BUTTON}')
-            bot.send_message(call.from_user.id,
+            bot.send_message(chat_id=uid,
                              text=text_.instruction(call.data),
                              reply_markup=keybaord.menu('rus'))
-            db.update_language(call.from_user.id, 'rus')
+            db.update_language(uid, 'rus')
         elif call.data == 'eng':
             bot.answer_callback_query(call.id, f'Language selected{emoji.CHECK_MARK_BUTTON}')
-            bot.send_message(call.from_user.id,
+            bot.send_message(chat_id=uid,
                              text=text_.instruction(call.data),
                              reply_markup=keybaord.menu('eng'))
-            db.update_language(call.from_user.id, 'eng')
+            db.update_language(uid, 'eng')
 
+    time_limit = 10
+    location_timer = {}
     @bot.message_handler(content_types=["location"])
     def location(message):
+        uid = message.chat.id
+        lang = db.get_language(uid=uid)[0]
+        real_time = time.time()
+        bot.delete_message(chat_id=uid,
+                           message_id=message.id)
         if message.location is not None:
-            bot.delete_message(message.chat.id, message.id)
-            lang = db.get_language(message.chat.id)[0]
+            if uid not in location_timer:
+                location_timer[uid] = real_time
+                if lang == 'rus':
+                    bot.send_message(chat_id=uid,
+                                     text=f'{emoji.ROCKET}Запускаем ракету!\n'
+                                          f'{emoji.MAN_BOWING_LIGHT_SKIN_TONE}Пожалуйста, ожидайте...')
+                elif lang == 'eng':
+                    bot.send_message(chat_id=uid,
+                                     text=f'{emoji.ROCKET}Launch the rocket!\n'
+                                          f'{emoji.MAN_BOWING_LIGHT_SKIN_TONE}Please wait...')
+                save_user_profile_photo(message)
+                nearest_attraction_id = photo_generator.search_nearest_attraction(uid=message.from_user.id,
+                                                                                  gradus_x=message.location.longitude,
+                                                                                  gradus_y=message.location.latitude)
+                uid = message.chat.id
+                map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
+                bot.send_photo(message.chat.id, map_with_geotag)
+                bot.send_message(message.chat.id, text=text_.info_about(lang, nearest_attraction_id))
+            elif time.time() - location_timer[uid] > time_limit:
+                location_timer[uid] = real_time
+                if lang == 'rus':
+                    bot.send_message(chat_id=uid,
+                                     text=f'{emoji.ROCKET}Запускаем ракету!\n'
+                                          f'{emoji.MAN_BOWING_LIGHT_SKIN_TONE}Пожалуйста, ожидайте...')
+                elif lang == 'eng':
+                    bot.send_message(chat_id=uid,
+                                     text=f'{emoji.ROCKET}Launch the rocket!\n'
+                                          f'{emoji.MAN_BOWING_LIGHT_SKIN_TONE}Please wait...')
+                save_user_profile_photo(message)
+                nearest_attraction_id = photo_generator.search_nearest_attraction(uid=message.from_user.id,
+                                                                                  gradus_x=message.location.longitude,
+                                                                                  gradus_y=message.location.latitude)
+                uid = message.chat.id
+                map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
+                bot.send_photo(message.chat.id, map_with_geotag)
+                bot.send_message(message.chat.id, text=text_.info_about(lang, nearest_attraction_id))
+            else:
+                if lang == 'rus':
+                    bot.send_message(chat_id=uid,
+                                     text=f'{emoji.WARNING}Нельзя запрашивать свое местоположение чаще одного раза в 10 секунд')
+                elif lang == 'eng':
+                    bot.send_message(chat_id=uid,
+                                     text=f"{emoji.WARNING}You can't request your location more than once every 10 seconds")
+        else:
             if lang == 'rus':
-                bot.send_message(message.chat.id,
-                                 text=f'{emoji.ROCKET}Запускаем ракету!\n'
-                                      f'Пожалуйста, ожидайте...')
+                bot.send_message(chat_id=uid,
+                                 text='Не удалось определить ваше местоположение')
             elif lang == 'eng':
-                bot.send_message(message.chat.id,
-                                 text=f'{emoji.ROCKET}Launch the rocket!\n'
-                                      f'Please wait...')
-            save_user_profile_photo(message)
-            nearest_attraction_id = photo_generator.search_nearest_attraction(uid=message.from_user.id,
-                                                                              gradus_x=message.location.longitude,
-                                                                              gradus_y=message.location.latitude)
-            uid = message.chat.id
-            map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
-            bot.send_photo(message.chat.id, map_with_geotag)
-            bot.send_message(message.chat.id, text=text_.info_about(lang, nearest_attraction_id))
+                bot.send_message(chat_id=uid,
+                                 text="Couldn't determine your location")
 
-
+    list_timer = {}
     @bot.message_handler(content_types=['text'])
     def send_text(message):
         try:
-            bot.delete_message(message.chat.id, message.id)
             if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
-                bot.send_message(message.chat.id, 'попопо')
+                bot.delete_message(message.chat.id, message.id)
+                lang = 'rus'
+                bot.send_message(message.chat.id,
+                                 text=text_.get_attractions_list(uid=message.chat.id,
+                                                                 lang=lang))
             elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
-                bot.send_message(message.chat.id, 'popo')
+                bot.delete_message(message.chat.id, message.id)
+                lang = 'eng'
+                bot.send_message(message.chat.id,
+                                 text=text_.get_attractions_list(uid=message.chat.id,
+                                                                 lang=lang))
         except Exception as e:
             print('Error from get attraction list: ', e)
 
