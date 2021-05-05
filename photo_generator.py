@@ -46,13 +46,11 @@ def drawing_not_nearest_attractions(uid, nearest_attraction_id, attractions_list
     y_centre = 975
     for attractions_id in attractions_list:
         if attractions_id != nearest_attraction_id:
-            print(attractions_id)
             attraction_coord_x = attractions['rus'][int(attractions_id)][2][0]
             attraction_coord_y = attractions['rus'][int(attractions_id)][2][1]
             attraction_coord_ypx = int(888 * 4 / 360 * attraction_coord_y)
             attraction_coord_xpx = int((1450 / 360 * attraction_coord_x * 2) * sqrt(1 - (attraction_coord_ypx / 960) ** 2))
             paste_pin_coord = (x_centre + attraction_coord_xpx - 45, y_centre - attraction_coord_ypx - 161)
-            print(paste_pin_coord)
             map.paste(pin_2, paste_pin_coord, pin_2)
     map.save(f'./ready_map_for_user/{uid}.png')
     drawing_geotag(uid, nearest_attraction_id, gradus_x, gradus_y)

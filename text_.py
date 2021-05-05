@@ -39,7 +39,7 @@ def info_about(lang, nearest_attraction_id):
         return_text = f'{emoji.ROUND_PUSHPIN}Ближайшее к вам место: {type_attraction} {name_attraction}\n\n' \
                       f'{emoji.SPIDER_WEB}Вот, что мы нашли о нем в Интернете:\n\n' \
                       f'{info_about_attraction}\n\n' \
-                      f'{emoji.CHECK_MARK_BUTTON}Также, место добавлено в ваш список'
+                      f'{emoji.CHECK_MARK_BUTTON}Место добавлено в ваш список'
         return return_text
     elif lang == 'eng':
         type_attraction = attractions[lang][nearest_attraction_id][1]
