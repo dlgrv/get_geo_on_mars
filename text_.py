@@ -19,16 +19,18 @@ def repeat_start():
 
 def instruction(lang):
     if lang == 'rus':
-        return_text = 'Круто!\n'\
-                      'Теперь стоит объяснить что к чему.\n'\
-                      'Ты кидаешь мне свою геопозицию, а я отправляю тебя в эту точку на Марсе!\n'\
-                      'А еще расскажу какая Марсианская достопримечательность находится ближе всего к тебе и добавлю ее в твой личный список!'
+        return_text = f'{emoji.PARTY_POPPER}Круто!\n\n'\
+                      f'{emoji.RAISING_HANDS_LIGHT_SKIN_TONE}Теперь стоит объяснить что к чему.\n\n'\
+                      f'{emoji.ROCKET}Ты кидаешь мне свою геопозицию, а я отправляю тебя в эту точку на Марсе!\n\n'\
+                      f'{emoji.ROUND_PUSHPIN}А еще расскажу какая Марсианская достопримечательность находится ближе ' \
+                      f'всего к тебе и добавлю ее в твой личный список{emoji.CHECK_MARK_BUTTON}'
         return return_text
     elif lang == 'eng':
-        return_text = "Cool!\n"\
-                      "Now it's worth explaining what's what.\n"\
-                      "You throw me your geoposition, and I send you to this point on Mars!"\
-                      "I'll also tell you which Martian attraction is closest to you and add it to your personal list!"
+        return_text = f"{emoji.PARTY_POPPER}Cool!\n\n"\
+                      f"{emoji.RAISING_HANDS_LIGHT_SKIN_TONE}Now it's worth explaining what's what.\n\n"\
+                      f"{emoji.ROCKET}You throw me your geoposition, and I send you to this point on Mars!\n\n"\
+                      f"{emoji.ROUND_PUSHPIN}I'll also tell you which Martian attraction is closest to you and " \
+                      f"add it to your personal list{emoji.CHECK_MARK_BUTTON}"
         return return_text
 
 def info_about(lang, nearest_attraction_id):

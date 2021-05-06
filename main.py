@@ -131,13 +131,16 @@ if __name__ == '__main__':
                     bot.send_message(chat_id=uid,
                                      text=f"{emoji.WARNING}You can't request your location more than once every "
                                           f"{time_limit_for_location} seconds")
+
+        '''
         else:
             if lang == 'rus':
                 bot.send_message(chat_id=uid,
-                                 text='Не удалось определить ваше местоположение')
+                                 text='Не удалось определwsvить ваше местоположение')
             elif lang == 'eng':
                 bot.send_message(chat_id=uid,
                                  text="Couldn't determine your location")
+        '''
 
     list_timer = {}
     time_limit_for_list = 5
@@ -145,38 +148,38 @@ if __name__ == '__main__':
     def send_text(message):
         uid = message.chat.id
         real_time = time.time()
-        bot.delete_message(message.chat.id, message.id)
         try:
-            if uid not in list_timer:
-                list_timer[uid] = real_time
-                if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
-                    lang = 'rus'
+            if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
+                bot.delete_message(message.chat.id, message.id)
+                lang = 'rus'
+                if uid not in list_timer:
+                    list_timer[uid] = real_time
                     bot.send_message(message.chat.id,
                                      text=text_.get_attractions_list(uid=message.chat.id,
                                                                      lang=lang))
-                elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
-                    lang = 'eng'
-                    bot.send_message(message.chat.id,
+                elif real_time - list_timer[uid] > time_limit_for_list:
+                    list_timer[uid] = real_time
+                    bot.send_message(chat_id=message.chat.id,
                                      text=text_.get_attractions_list(uid=message.chat.id,
                                                                      lang=lang))
-            elif real_time - list_timer[uid] > time_limit_for_list:
-                list_timer[uid] = real_time
-                if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
-                    lang = 'rus'
-                    bot.send_message(message.chat.id,
-                                     text=text_.get_attractions_list(uid=message.chat.id,
-                                                                     lang=lang))
-                elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
-                    lang = 'eng'
-                    bot.send_message(message.chat.id,
-                                     text=text_.get_attractions_list(uid=message.chat.id,
-                                                                     lang=lang))
-            else:
-                if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
-                    bot.send_message(message.chat.id,
+                else:
+                    bot.send_message(chat_id=message.chat.id,
                                      text=f'{emoji.WARNING}Нельзя запрашивать список своих мест чаще одного раза '
                                           f'в {time_limit_for_list} секунд')
-                elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
+            elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
+                bot.delete_message(message.chat.id, message.id)
+                lang = 'eng'
+                if uid not in list_timer:
+                    list_timer[uid] = real_time
+                    bot.send_message(message.chat.id,
+                                     text=text_.get_attractions_list(uid=message.chat.id,
+                                                                     lang=lang))
+                elif real_time - list_timer[uid] > time_limit_for_list:
+                    list_timer[uid] = real_time
+                    bot.send_message(chat_id=message.chat.id,
+                                     text=text_.get_attractions_list(uid=message.chat.id,
+                                                                     lang=lang))
+                else:
                     bot.send_message(message.chat.id,
                                      text=f"{emoji.WARNING}You can't request list of your places more than once"
                                           f" every {time_limit_for_list} seconds")
