@@ -30,7 +30,6 @@ def save_user_profile_photo(message):
         return False
 
 if __name__ == '__main__':
-
     @bot.message_handler(commands=['start'])
     def start_message(message):
         try:
@@ -91,10 +90,14 @@ if __name__ == '__main__':
                 nearest_attraction_id = photo_generator.search_nearest_attraction(uid=message.from_user.id,
                                                                                   gradus_x=message.location.longitude,
                                                                                   gradus_y=message.location.latitude)
-                uid = message.chat.id
                 map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
-                bot.send_photo(message.chat.id, map_with_geotag)
-                bot.send_message(message.chat.id, text=text_.info_about(lang, nearest_attraction_id))
+                bot.send_photo(chat_id=message.chat.id,
+                               photo=map_with_geotag)
+                bot.send_message(chat_id=message.chat.id,
+                                 text=text_.info_about(lang, nearest_attraction_id))
+                db.add_info_about_geo(uid=uid,
+                                      gradus_x=message.location.longitude,
+                                      gradus_y=message.location.latitude)
             elif time.time() - location_timer[uid] > time_limit_for_location:
                 location_timer[uid] = real_time
                 if lang == 'rus':
@@ -109,10 +112,14 @@ if __name__ == '__main__':
                 nearest_attraction_id = photo_generator.search_nearest_attraction(uid=message.from_user.id,
                                                                                   gradus_x=message.location.longitude,
                                                                                   gradus_y=message.location.latitude)
-                uid = message.chat.id
                 map_with_geotag = open(f'./ready_map_for_user/{uid}.jpg', 'rb')
-                bot.send_photo(message.chat.id, map_with_geotag)
-                bot.send_message(message.chat.id, text=text_.info_about(lang, nearest_attraction_id))
+                bot.send_photo(chat_id=message.chat.id,
+                               photo=map_with_geotag)
+                bot.send_message(chat_id=message.chat.id,
+                                 text=text_.info_about(lang, nearest_attraction_id))
+                db.add_info_about_geo(uid=uid,
+                                      gradus_x=message.location.longitude,
+                                      gradus_y=message.location.latitude)
             else:
                 if lang == 'rus':
                     bot.send_message(chat_id=uid,

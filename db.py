@@ -1,5 +1,6 @@
 from mysql.connector import MySQLConnection, Error
 from dbconfig import read_db_config
+from time import time
 
 table_name = 'imonmarsbot'
 
@@ -128,6 +129,29 @@ def get_attractions(uid):
         return rows
     except Error as e:
         print(f'[DataBase] ERR: {e} (get_language)')
+    finally:
+        cursor.close()
+        conn.close()
+
+# ADD INFO ABOUT USER GEO
+
+def add_info_about_geo(uid, gradus_x, gradus_y):
+    dbconfig = read_db_config()
+    conn = MySQLConnection(**dbconfig)
+    cursor = conn.cursor()
+    info_about_geo = f'{int(time())} {gradus_x} {gradus_y}'
+
+    query = f'UPDATE {table_name} ' \
+            f'SET geo_info = CONCAT(geo_info, "{info_about_geo}") ' \
+            f'WHERE uid = {uid} ' \
+            f'LIMIT 1'
+    try:
+        cursor.execute(query)
+        conn.commit()
+        print(f'[DataBase] --> (add_info_about_geo)')
+    except Error as e:
+        print(f'[DataBase] ERR: {e} (add_info_about_geo)')
+        pass
     finally:
         cursor.close()
         conn.close()
