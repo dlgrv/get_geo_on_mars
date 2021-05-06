@@ -10,6 +10,8 @@ import time
 
 bot = telebot.TeleBot(token)
 
+# КОД ИМЕЕТ ТУПОЙ КОПИПАСТ ЦЕЛЫХ ФУНКЦИЙ В 2-УХ МЕСТАХ, ПИСАЛ НА ХОДУ, ДОЙДУТ РУКИ- ИСПРАВЛЮ
+
 def save_user_profile_photo(message):
     profile_photo_file_id = bot.get_user_profile_photos(message.chat.id).photos
     if profile_photo_file_id != []:
@@ -66,7 +68,7 @@ if __name__ == '__main__':
                              reply_markup=keybaord.menu('eng'))
             db.update_language(uid, 'eng')
 
-    time_limit_for_location = 10
+    time_limit_for_location = 12
     location_timer = {}
     @bot.message_handler(content_types=["location"])
     def location(message):
@@ -141,19 +143,43 @@ if __name__ == '__main__':
     time_limit_for_list = 5
     @bot.message_handler(content_types=['text'])
     def send_text(message):
+        uid = message.chat.id
+        real_time = time.time()
+        bot.delete_message(message.chat.id, message.id)
         try:
-            if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
-                bot.delete_message(message.chat.id, message.id)
-                lang = 'rus'
-                bot.send_message(message.chat.id,
-                                 text=text_.get_attractions_list(uid=message.chat.id,
-                                                                 lang=lang))
-            elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
-                bot.delete_message(message.chat.id, message.id)
-                lang = 'eng'
-                bot.send_message(message.chat.id,
-                                 text=text_.get_attractions_list(uid=message.chat.id,
-                                                                 lang=lang))
+            if uid not in list_timer:
+                list_timer[uid] = real_time
+                if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
+                    lang = 'rus'
+                    bot.send_message(message.chat.id,
+                                     text=text_.get_attractions_list(uid=message.chat.id,
+                                                                     lang=lang))
+                elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
+                    lang = 'eng'
+                    bot.send_message(message.chat.id,
+                                     text=text_.get_attractions_list(uid=message.chat.id,
+                                                                     lang=lang))
+            elif real_time - list_timer[uid] > time_limit_for_list:
+                list_timer[uid] = real_time
+                if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
+                    lang = 'rus'
+                    bot.send_message(message.chat.id,
+                                     text=text_.get_attractions_list(uid=message.chat.id,
+                                                                     lang=lang))
+                elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
+                    lang = 'eng'
+                    bot.send_message(message.chat.id,
+                                     text=text_.get_attractions_list(uid=message.chat.id,
+                                                                     lang=lang))
+            else:
+                if message.text == f'{emoji.WORLD_MAP}Список моих мест{emoji.MEMO}':
+                    bot.send_message(message.chat.id,
+                                     text=f'{emoji.WARNING}Нельзя запрашивать список своих мест чаще одного раза '
+                                          f'в {time_limit_for_list} секунд')
+                elif message.text == f"{emoji.WORLD_MAP}List of my places{emoji.MEMO}":
+                    bot.send_message(message.chat.id,
+                                     text=f"{emoji.WARNING}You can't request list of your places more than once"
+                                          f" every {time_limit_for_list} seconds")
         except Exception as e:
             print('Error from get attraction list: ', e)
 

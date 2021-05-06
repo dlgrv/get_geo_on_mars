@@ -139,7 +139,7 @@ def add_info_about_geo(uid, gradus_x, gradus_y):
     dbconfig = read_db_config()
     conn = MySQLConnection(**dbconfig)
     cursor = conn.cursor()
-    info_about_geo = f'{int(time())} {gradus_x} {gradus_y}'
+    info_about_geo = f' {int(time())} {gradus_x} {gradus_y}'
 
     query = f'UPDATE {table_name} ' \
             f'SET geo_info = CONCAT(geo_info, "{info_about_geo}") ' \
