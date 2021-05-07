@@ -131,7 +131,6 @@ if __name__ == '__main__':
                     bot.send_message(chat_id=uid,
                                      text=f"{emoji.WARNING}You can't request your location more than once every "
                                           f"{time_limit_for_location} seconds")
-
         '''
         else:
             if lang == 'rus':
